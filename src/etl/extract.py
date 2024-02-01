@@ -1,6 +1,7 @@
 import os
 from spark_handler import SparkHandler
 from pyspark.sql import DataFrame
+from schema import custom_schema
 
 class Extract(object):
 	"""
@@ -16,7 +17,7 @@ class Extract(object):
 		Method for collecting data from parquet files and saving processed data.
 		"""
 		parquet_file_path = os.path.join(self.raw_data_path, parquet_file)
-		df: DataFrame = self.spark.read.parquet(parquet_file_path)
+		df: DataFrame = self.spark.read.option("inferSchema" , "true").parquet(parquet_file_path)
 
 		df = df.select(
 			'VendorID', 
