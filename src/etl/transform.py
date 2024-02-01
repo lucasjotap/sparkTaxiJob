@@ -10,7 +10,7 @@ class Transform(object):
 
 	def __init__(self):
 		self.spark: SparkSession = SparkHandler.create_session()
-		self.processed_data_path: str = "/home/lucas/Desktop/Python/large-scale-data-processing/data/processed/.part-00000-021fa0a4-628f-45e8-8ebc-ced9268f79df-c000.snappy.parquet.crc"
+		self.processed_data_path: str = "/home/lucas/Desktop/Python/large-scale-data-processing/data/processed/*.parquet"
 		self.write_to_processed_layer_data_path: str = '/home/lucas/Desktop/Python/large-scale-data-processing/data/output/'
 
 	def data_to_transform(self):
@@ -23,7 +23,7 @@ class Transform(object):
 		"""
 		df = self.data_to_transform()
 
-		df = df.withColumn("VendorID", col("VendorID").cast(IntegerType()))
+		df = df.withColumn("VendorID", col("VendorID").cast(DoubleType()))
 
 		result_df = (
 		    df
