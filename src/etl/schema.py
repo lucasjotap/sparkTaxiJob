@@ -1,9 +1,4 @@
-from pyspark.sql.types import (DoubleType, 
-								LongType, 
-								IntegerType, 
-								TimestampNTZType, 
-								StructType, 
-								StructField)
+from pyspark.sql.types import DoubleType, LongType, IntegerType, TimestampNTZType, StructType, StructField
 
 custom_schema = StructType([
 	StructField('VendorID', IntegerType(), True), 
