@@ -1,5 +1,5 @@
 from pyspark.sql.functions import col, round, sum
-from pyspark.sql.types import DoubleType, IntegerType
+from pyspark.sql.types import DoubleType, IntegerType, LongType
 
 from pyspark.sql import SparkSession, DataFrame
 from spark_handler import SparkHandler
@@ -10,7 +10,7 @@ class Transform(object):
 
 	def __init__(self):
 		self.spark: SparkSession = SparkHandler.create_session()
-		self.processed_data_path: str = "/home/lucas/Desktop/Python/large-scale-data-processing/data/processed/*.parquet"
+		self.processed_data_path: str = "/home/lucas/Desktop/Python/large-scale-data-processing/data/raw/*.parquet"
 		self.write_to_processed_layer_data_path: str = '/home/lucas/Desktop/Python/large-scale-data-processing/data/output/'
 
 	def data_to_transform(self):
@@ -23,14 +23,15 @@ class Transform(object):
 		"""
 		df = self.data_to_transform()
 
-		df = df.withColumn("VendorID", col("VendorID").cast(DoubleType()))
+		# df = df.withColumn("VendorID", col("VendorID").cast(LongType()))
 
 		result_df = (
 		    df
-		    .groupBy("VendorID")  # GROUP BY VendorID
-		    .agg(round(sum("fare_amount"), 2).alias("rounded_sum_fare_amount"))  # ROUND(SUM(fare_amount), 2) and alias the result
-		    .select("VendorID", "rounded_sum_fare_amount")  # SELECT VendorID and the rounded sum
-		)
+		    .groupBy('VendorID')
+		    .agg(sum(col('fare_amount')
+		    .cast('double'))
+		    .alias('total_fare'))
+		    )
 		return result_df
 
 	def output_data(self):
