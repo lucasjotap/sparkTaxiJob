@@ -15,7 +15,7 @@ class Transform(object):
 
         load_dotenv()
         # Inicializa a sessão do Spark
-        self.spark: SparkSession = SparkSession.builder.appName("Transformação de Dados").getOrCreate()
+        self.spark: SparkSession = SparkHandler.create_session()
         
         # Define os caminhos dos dados de entrada e saída
         self.processed_data_path: str = os.getenv("DATA_PATH") + "/large-scale-data-processing/data/raw/*.parquet"
@@ -88,9 +88,11 @@ class Transform(object):
             (1, "Creative Mobile Tech, LLC"),
             (2, "Verifone Inc")]
 
-        vendor_df = self.spark.createDateFrame(vendor_mapping, schema=vendor_schema)
+        vendor_df = self.spark.createDataFrame(vendor_mapping, schema=vendor_schema)
 
         result_df = df.join(vendor_df, on="VendorID", how="left")
+
+        result_df.show(10)
 
         return result_df
 

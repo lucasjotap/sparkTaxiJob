@@ -1,4 +1,4 @@
-from pyspark.sql.types import StructType, StructField, LongType, IntegerType, TimestampNTZType, StructType, StructField
+from pyspark.sql.types import StructType, StructField, LongType, IntegerType, TimestampNTZType, StringType
 
 from dataclasses import dataclass
 
@@ -19,7 +19,7 @@ class TaxiTrip:
 @dataclass
 class Vendors:
 	VendorID: LongType() 
-	company_name: LongType()
+	company_name: StringType()
 
 taxi_schema = StructType([
 		StructField(field.name, field.type, True) for field in TaxiTrip.__dataclass_fields__.values()
@@ -28,6 +28,3 @@ taxi_schema = StructType([
 vendor_schema = StructType([
 		StructField(field.name, field.type, True) for field in Vendors.__dataclass_fields__.values()
 	])
-
-print(taxi_schema, "\n")
-print(vendor_schema)
