@@ -1,4 +1,4 @@
-from pyspark.sql.types import StructType, StructField, LongType, IntegerType, TimestampNTZType, StringType
+from pyspark.sql.types import StructType, StructField, LongType, IntegerType, TimestampNTZType, StringType, DoubleType
 
 from dataclasses import dataclass
 
@@ -7,14 +7,22 @@ class TaxiTrip:
 	VendorID: IntegerType()
 	tpep_pickup_datetime: TimestampNTZType()
 	tpep_dropoff_datetime: TimestampNTZType()
-	passenger_count: IntegerType()
-	trip_distance: LongType()
+	passenger_count: LongType()
+	trip_distance: DoubleType()
+	RatecodeID: LongType()
+	store_and_fwd_flag: StringType()
+	PULocationID: IntegerType()
 	DOLocationID: IntegerType()
-	payment_type: IntegerType()
-	fare_amount: LongType()
-	tip_amount: LongType()
-	tolls_amount: LongType()
-	total_amount: LongType()
+	payment_type: LongType()
+	fare_amount: DoubleType()
+	extra: DoubleType()
+	mta_tax: DoubleType()
+	tip_amount: DoubleType()
+	tolls_amount: DoubleType()
+	improvement_surcharge: DoubleType()
+	total_amount: DoubleType()
+	congestion_surcharge: DoubleType()
+	Airport_fee: DoubleType()
 
 @dataclass
 class Vendors:

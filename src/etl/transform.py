@@ -84,6 +84,18 @@ class Transform(object):
         """
         df = self.df 
 
+        result_df  = df.select('VendorID', 
+            'tpep_pickup_datetime', 
+            'tpep_dropoff_datetime', 
+            'passenger_count', 
+            'trip_distance', 
+            'payment_type', 
+            'fare_amount', 
+            'tip_amount', 
+            'total_amount'
+            )
+
+
         vendor_mapping = [
             (1, "Creative Mobile Tech, LLC"),
             (2, "Verifone Inc")]
