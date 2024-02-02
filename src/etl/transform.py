@@ -13,8 +13,8 @@ class Transform(object):
         self.spark: SparkSession = SparkSession.builder.appName("Transformação de Dados").getOrCreate()
         
         # Define os caminhos dos dados de entrada e saída
-        self.processed_data_path: str = "/home/lucas/Desktop/Python/large-scale-data-processing/data/raw/*.parquet"
-        self.write_to_processed_layer_data_path: str = '/home/lucas/Desktop/Python/large-scale-data-processing/data/output/'
+        self.processed_data_path: str = "/large-scale-data-processing/data/raw/*.parquet"
+        self.write_to_processed_layer_data_path: str = '/large-scale-data-processing/data/output/'
 
     def data_to_transform(self):
         """

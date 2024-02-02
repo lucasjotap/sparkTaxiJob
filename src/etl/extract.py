@@ -15,7 +15,7 @@ cclass Extract(object):
     def __init__(self):
         # Cria a sessão do Spark
         self.spark = SparkHandler.create_session()
-        self.raw_data_path = '/home/lucas/Desktop/Python/large-scale-data-processing/data/raw'
+        self.raw_data_path = '/large-scale-data-processing/data/raw'
         # Obtém a lista de arquivos parquet no caminho fornecido
         self.list_of_parquets: List[str] = os.listdir(self.raw_data_path)
 
@@ -45,7 +45,7 @@ cclass Extract(object):
         )
 
         # Escreve os dados processados no modo "append"
-        df.write.mode("append").parquet('/home/lucas/Desktop/Python/large-scale-data-processing/data/processed/')
+        df.write.mode("append").parquet('/large-scale-data-processing/data/processed/')
 
     def write_data_to_processed_layer(self):
         """
