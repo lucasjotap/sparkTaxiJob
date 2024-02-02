@@ -25,7 +25,7 @@ cclass Extract(object):
         """
         parquet_file_path = os.path.join(self.raw_data_path, parquet_file)
         # Lê o arquivo parquet usando o esquema customizado
-        df: DataFrame = self.spark.read.schema(custom_schema).parquet(parquet_file_path)
+        df: DataFrame = self.spark.read.schema(taxi_schema).parquet(parquet_file_path)
         # Converte a coluna 'VendorID' para tipo Integer
         df = df.withColumn('VendorID', col("VendorID").cast(IntegerType()))
 

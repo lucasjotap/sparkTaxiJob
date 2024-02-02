@@ -13,3 +13,4 @@ custom_schema = StructType([
 	StructField('tolls_amount', DoubleType(), True), 
 	StructField('total_amount', DoubleType(), True),
 	])
+

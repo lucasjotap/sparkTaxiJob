@@ -1,20 +1,25 @@
+import os
+from dotenv import load_dotenv
+
 from pyspark.sql.functions import col, round, sum, expr, abs
 from pyspark.sql.types import DoubleType, IntegerType, LongType
 
 from spark_handler import SparkHandler
 from pyspark.sql import SparkSession, DataFrame
 
-from schema import custom_schema
+from schema_playground import taxi_schema, vendor_schema
 
 class Transform(object):
 
     def __init__(self):
+
+        load_dotenv()
         # Inicializa a sessão do Spark
         self.spark: SparkSession = SparkSession.builder.appName("Transformação de Dados").getOrCreate()
         
         # Define os caminhos dos dados de entrada e saída
-        self.processed_data_path: str = "/large-scale-data-processing/data/raw/*.parquet"
-        self.write_to_processed_layer_data_path: str = '/large-scale-data-processing/data/output/'
+        self.processed_data_path: str = os.getenv("DATA_PATH") + "/large-scale-data-processing/data/raw/*.parquet"
+        self.write_to_processed_layer_data_path: str = os.getenv("DATA_PATH") + '/large-scale-data-processing/data/output/'
 
         # Dataframe que será lido.
         self.df: DataFrame = self.data_to_transform()
@@ -23,7 +28,7 @@ class Transform(object):
         """
         Carrega os dados de entrada usando o esquema customizado.
         """
-        return self.spark.read.schema(custom_schema).parquet(self.processed_data_path)
+        return self.spark.read.schema(taxi_schema).parquet(self.processed_data_path)
         
     def transfomation_action(self) -> DataFrame:
         """
@@ -70,7 +75,25 @@ class Transform(object):
             'tip_amount', 
             'total_amount', 
             'trip_duration_minutes')
-        
+
+        return result_df
+
+    def data_to_transform_three(self) -> DataFrame:
+        """
+        Realiza análise por duração de viagem.
+        """
+        df = self.df 
+
+        vendor_mapping = [
+            (1, "Creative Mobile Tech, LLC"),
+            (2, "Verifone Inc")]
+
+        vendor_df = self.spark.createDateFrame(vendor_mapping, schema=vendor_schema)
+
+        result_df = df.join(vendor_df, on="VendorID", how="left")
+
+        return result_df
+
 
     def output_data(self):
         """
@@ -82,4 +105,4 @@ class Transform(object):
 if __name__ == "__main__":
     # Instancia a classe de transformação e executa a saída de dados
     transform: Transform = Transform()
-    transform.output_data()
+    transform.data_to_transform_three()

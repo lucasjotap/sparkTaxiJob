@@ -1,3 +1,4 @@
 venv/
 data/output/
 data/processed/
+/home/lucas/Desktop/Python/large-scale-data-processing/src/etl/.env
