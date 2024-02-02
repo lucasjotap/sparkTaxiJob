@@ -1,4 +1,4 @@
-from pyspark.sql.functions import col, round, sum
+from pyspark.sql.functions import col, round, sum, expr, abs
 from pyspark.sql.types import DoubleType, IntegerType, LongType
 
 from spark_handler import SparkHandler
@@ -16,18 +16,20 @@ class Transform(object):
         self.processed_data_path: str = "/large-scale-data-processing/data/raw/*.parquet"
         self.write_to_processed_layer_data_path: str = '/large-scale-data-processing/data/output/'
 
+        # Dataframe que será lido.
+        self.df: DataFrame = self.data_to_transform()
+
     def data_to_transform(self):
         """
         Carrega os dados de entrada usando o esquema customizado.
         """
         return self.spark.read.schema(custom_schema).parquet(self.processed_data_path)
         
-    def transfomation_action(self):
+    def transfomation_action(self) -> DataFrame:
         """
-        Realiza a transformação necessária nos dados.
+        Realiza a transformação com group by sobre o total de preços por companhia de taxi.
         """
-        df = self.data_to_transform()
-
+        df: DataFrame = self.df
         # Comente ou descomente a linha abaixo conforme a necessidade de conversão do tipo VendorID
         # df = df.withColumn("VendorID", col("VendorID").cast(LongType()))
 
@@ -38,6 +40,37 @@ class Transform(object):
             .agg(sum(col('fare_amount').cast('double')).alias('total_fare'))
         )
         return result_df
+
+    def data_to_transform_two(self) -> DataFrame:
+        """
+        Realiza análise por duração de viagem.
+        """
+        df = self.df 
+
+        result_df = (
+            df.filter((df.fare_amount > 200) & (df.fare_amount < 300))
+            .orderBy('fare_amount')
+            )
+
+        result_df = (
+            result_df
+            .withColumn("time_difference", expr("unix_timestamp(tpep_pickup_time) - unix_timestamp(tpep_dropoff_time)")))
+
+        result_df = result_df.withColumn("trip_duration_minutes", abs(col("time_difference")))
+
+        result_df  = result_df.select('VendorID', 
+            'tpep_pickup_datetime', 
+            'tpep_dropoff_datetime', 
+            'passenger_count', 
+            'trip_distance', 
+            'PULocationID', 
+            'DOLocationID', 
+            'payment_type', 
+            'fare_amount', 
+            'tip_amount', 
+            'total_amount', 
+            'trip_duration_minutes')
+        
 
     def output_data(self):
         """
