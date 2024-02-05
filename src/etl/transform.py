@@ -80,7 +80,7 @@ class Transform(object):
 
     def data_to_transform_three(self) -> DataFrame:
         """
-        Realiza análise por duração de viagem.
+        Junta tabelas vendor e taxi_trips na VendorID.
         """
         df = self.df 
 
@@ -95,7 +95,6 @@ class Transform(object):
             'total_amount'
             )
 
-
         vendor_mapping = [
             (1, "Creative Mobile Tech, LLC"),
             (2, "Verifone Inc")]
@@ -104,7 +103,7 @@ class Transform(object):
 
         result_df = df.join(vendor_df, on="VendorID", how="left")
 
-        result_df.show(10)
+        result_df.write.mode('overwrite').parquet('/home/lucas/Desktop/Python/large-scale-data-processing/data/output/joined_table_a/')
 
         return result_df
 

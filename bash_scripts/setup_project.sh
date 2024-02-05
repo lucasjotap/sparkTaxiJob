@@ -3,6 +3,9 @@
 # Create project folders
 mkdir -p large-scale-data-processing/{data/{raw,processed,output},notebooks,src/{etl,utils},scripts}
 
+# Create new folder within output for storing data
+mkdir large-scale-data-processing/data/raw/output/joined_table_a
+
 # Create Python files
 touch large-scale-data-processing/src/{etl/__init__.py,etl/extract.py,etl/transform.py,etl/load.py,utils/__init__.py,utils/config.py,utils/logging.py,main.py}
 
