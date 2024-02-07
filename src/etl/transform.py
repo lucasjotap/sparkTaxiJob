@@ -103,7 +103,7 @@ class Transform(object):
 
         result_df = df.join(vendor_df, on="VendorID", how="left")
 
-        result_df.write.mode('overwrite').parquet('/home/lucas/Desktop/Python/large-scale-data-processing/data/output/joined_table_a')
+        result_df.write.mode('overwrite').parquet('/home/lucas/Desktop/Python/large-scale-data-processing/data/output/joined_table_a/')
 
         return result_df
 
