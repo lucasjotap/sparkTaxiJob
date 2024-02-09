@@ -18,7 +18,7 @@ class Transform(object):
         self.spark: SparkSession = SparkHandler.create_session()
         
         # Define os caminhos dos dados de entrada e saída
-        self.processed_data_path: str = os.getenv("DATA_PATH") + "/large-scale-data-processing/data/raw/*.parquet"
+        self.processed_data_path: str = os.getenv("DATA_PATH") + "/large-scale-data-processing/data/raw"
         self.write_to_processed_layer_data_path: str = os.getenv("DATA_PATH") + '/large-scale-data-processing/data/output/'
 
         # Dataframe que será lido.
