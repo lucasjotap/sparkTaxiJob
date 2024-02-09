@@ -6,18 +6,17 @@ class DataLoader(object):
 
 	def __init__(self):
 		self.spark = SparkHandler.create_session()
-		self.jdcb_url = "jdbc:postgresql://127.0.0.1:5432/taxi_data"
+		self.jdbc_url = "jdbc:postgresql://localhost:5432/taxi_data"
 		self.table_name = "taxi_trips"
 		self.properties = {
 	    "user": "taxi_driver",
 	    "password": "yellowcab"
 		}
-		self.spark.conf.set("spark.sql.catalogImplementation", "hive")
 
 	def create_table(self):
 
 		query = """
-			CREATE TABLE taxi_trips (
+			CREATE TABLE IF NOT EXISTS taxi_trips (
 			    VendorID INTEGER,
 			    tpep_pickup_datetime TIMESTAMP,
 			    tpep_dropoff_datetime TIMESTAMP,
@@ -47,7 +46,7 @@ class DataLoader(object):
 	    .write
 	    .format("jdbc")
 	    .option("url", self.jdbc_url)
-	    .option("dbtable", self.table_name)
+	    .option("dbtable", "taxi_data.taxi_trips")
 	    .option("user", self.properties["user"])
 	    .option("password", self.properties["password"])
 	    .save()
@@ -59,8 +58,8 @@ class DataLoader(object):
 
 		(
 		df.write.format("jdbc")
-	    .option("url", "jdbc:postgresql:dbserver")
-	    .option("dbtable", "schema.tablename")
+	    .option("url", self.jdbc_url)
+	    .option("dbtable", "taxi_data.taxi_trips")
 	    .option("user", self.properties.get('user'))
 	    .option("password", self.properties.get('password'))
 	    .save()
