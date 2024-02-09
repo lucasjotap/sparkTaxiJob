@@ -1,12 +1,15 @@
-from pyspark.sql import SparkSession
+import os
+from dotenv import load_dotenv
+
 from spark_handler import SparkHandler
-	
 
 class DataLoader(object):
 
 	def __init__(self):
+		load_dotenv()
+		# Register PostgreSQL JDBC driver
 		self.spark = SparkHandler.create_session()
-		self.jdbc_url = "jdbc:postgresql://localhost:5432/taxi_data"
+		self.jdbc_url = "jdbc:postgresql://127.0.0.1:5432/taxi_data"
 		self.table_name = "taxi_trips"
 		self.properties = {
 	    "user": "taxi_driver",
