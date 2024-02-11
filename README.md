@@ -1,1 +1,1 @@
-![image](https://github.com/lucasjotap/sparkTaxiJob/assets/98364965/f1509ec6-bd08-46a9-84cf-25c0deda98a7)
+![image](https://github.com/lucasjotap/sparkTaxiJob/assets/98364965/9409ac81-4826-4d4d-bc83-64a8aa80a9aa)
