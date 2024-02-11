@@ -2,8 +2,10 @@ import os
 import psycopg2
 import pandas as pd
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, Engine
 from spark_handler import SparkHandler
+
+from typing import NoReturn
 
 class Load(object):
 
@@ -23,26 +25,17 @@ class Load(object):
 		)
 
 		self.cur = self.conn.cursor()
-		self.spark = SparkHandler.create_session()
-
-	def define_them_partitions(self):
+s
+	def define_them_partitions(self) -> NoReturn:
 		df = self.spark.read.parquet("/home/lucas/Desktop/Python/large-scale-data-processing/data/output/joined_table_b")
-		# df = (
-		# 	df.withColumn('','')
-		# 	.withColumn('','')
-		# 	.withColumn('','')
-		# 	.withColumn('','')
-		# 	.withColumn('','')
-		# 	.withColumn('','')
-		# 	)
 		df = df.repartition(90)
 		df.write.mode("overwrite").parquet("/home/lucas/Desktop/Python/large-scale-data-processing/data/output/joined_table_c")
 		print("\nRepartition job finished\n")
 
-	def create_engine(self):
+	def create_engine(self) -> Engine:
 		return create_engine(f'postgresql://{self.user}:{self.password}@localhost:5432/{self.dbname}')
 
-	def create_table(self):
+	def create_table(self) -> NoReturn:
 
 		query = """
 			CREATE TABLE IF NOT EXISTS taxi_trips (
@@ -71,9 +64,9 @@ class Load(object):
 		self.cur.execute(query)
 		self.conn.commit()
 
-	def load_data(self):
-		# self.create_table()
-		# self.define_them_partitions()
+	def load_data(self) -> NoReturn:
+		self.create_table()
+		self.define_them_partitions()
 
 		parquet_files_list = os.listdir(path='/home/lucas/Desktop/Python/large-scale-data-processing/data/output/joined_table_c')
 		parquet_files = [file for file in parquet_files_list if file.endswith('.parquet')]
@@ -83,14 +76,9 @@ class Load(object):
 			df = pd.read_parquet(f"/home/lucas/Desktop/Python/large-scale-data-processing/data/output/joined_table_c/{parquet}")
 			print(df)
 			
-			df.to_sql('taxi_trips', engine, if_exists='append', index=False)
-			self.conn.commit()
-			self.close_sessions()
-			break
-
-	def close_sessions(self):
-		self.cur.close()
-		self.conn.close()
+			with engine.begin() as conn, conn.begin() as trans:
+				df.to_sql('taxi_trips', engine, if_exists='append', index=False)
+				trans.commit()
 
 if __name__ == "__main__":
 	ld = Load()
