@@ -34,5 +34,6 @@ taxi_schema = StructType([
 	])
 
 vendor_schema = StructType([
-		StructField(field.name, field.type, True) for field in Vendors.__dataclass_fields__.values()
+		StructField(field.name, field.type, False) for field in Vendors.__dataclass_fields__.values()
 	])
+print(vendor_schema)

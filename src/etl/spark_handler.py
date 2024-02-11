@@ -15,8 +15,6 @@ class SparkHandler(object):
 				SparkSession
 				.builder
 				.appName("my_spark_app")
-				.config("spark.sql.catalogImplementation", "hive")
-				.config("spark.driver.userClassPathFirst", "true")
 				.getOrCreate()
 				)
 		return cls.spark

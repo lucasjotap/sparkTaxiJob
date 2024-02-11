@@ -92,7 +92,8 @@ class Transform(object):
             'payment_type', 
             'fare_amount', 
             'tip_amount', 
-            'total_amount'
+            'total_amount',
+            'congestion_surcharge'
             )
 
         vendor_mapping = [
@@ -101,9 +102,9 @@ class Transform(object):
 
         vendor_df = self.spark.createDataFrame(vendor_mapping, schema=vendor_schema)
 
-        result_df = df.join(vendor_df, on="VendorID", how="left")
+        write_df = df.join(vendor_df, on="VendorID", how="inner")
 
-        result_df.write.mode('overwrite').parquet('/home/lucas/Desktop/Python/large-scale-data-processing/data/output/joined_table_a/')
+        write_df.write.mode('overwrite').parquet('/home/lucas/Desktop/Python/large-scale-data-processing/data/output/joined_table_b/')
 
         return result_df
 
